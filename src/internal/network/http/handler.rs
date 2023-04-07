@@ -1,6 +1,6 @@
-use reqwest;
+use reqwest::blocking::Client;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::{collections::HashMap, time::Duration};
 
 pub struct GithubApiHandler {
     url: String,
@@ -22,16 +22,15 @@ impl GithubApiHandler {
     pub fn new(url: String) -> Self {
         Self { url }
     }
-    pub async fn create_gist(
-        &self,
-        body: CreateGistBody,
-    ) -> Result<(), reqwest::Error> {
-        let client = reqwest::Client::new();
-        let res = match client.post(self.url.clone()).json(&body).send().await {
-            Ok(res) => {println!("res: {:?}", res); res},
-            Err(e) => {println!("error: {}", e); return Err(e)}
-        };
-        println!("{:?}", res);
-        Ok(())
+    pub fn create_gist(&self, body: CreateGistBody) -> Result<String, Box<dyn std::error::Error>> {
+        let serial_body = serde_json::to_string(&body)?;
+        let client = Client::builder().timeout(Duration::from_secs(10)).build()?;
+        let response = client
+            .post(self.url.clone())
+            .header("Content-Type", "application/json")
+            .body(serial_body)
+            .send()?;
+        // println!("{}", response.text()?);
+        Ok(response.text()?)
     }
 }
