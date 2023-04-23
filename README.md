@@ -3,6 +3,9 @@ Synchronizing Neovim's configurations
 
 ## How to
 ### Setup
+```bash
+cargo install neo-sync
+```
 - Export `GITHUB_ACCESS_TOKEN` env by your Github Access Token
 
 ### Run

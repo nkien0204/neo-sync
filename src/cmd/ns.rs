@@ -1,13 +1,20 @@
+use std::env;
+
 use structopt::StructOpt;
 
-use super::subcommands::{common::SubCommand, download_cmd::DownloadCmd, upload_cmd::UploadCmd};
+use crate::internal::local::gist_management;
 
-const VERSION: &str = "v0.0.3";
+use super::subcommands::{
+    common::{self, SubCommand},
+    download_cmd::DownloadCmd,
+    upload_cmd::UploadCmd,
+};
+
 const DEFAULT_PATH: &str = "$HOME/.config/nvim/init.vim";
 
 #[derive(StructOpt, Debug)]
-#[structopt(about = "Synchronizing for Neovim's configurations", version = VERSION)]
-pub enum Vcs {
+#[structopt(about = "Synchronizing for Neovim's configurations")]
+pub enum Ns {
     #[structopt(about = "Upload local config")]
     Upload {
         /// config file
@@ -24,14 +31,21 @@ pub enum Vcs {
 }
 
 pub fn execute() {
-    let cmd = Vcs::from_args();
+    let dir_path = format!(
+        "{}/{}",
+        env::var("HOME").unwrap(),
+        common::GIST_PREFIX_FILENAME
+    );
+    gist_management::create_ns_home(&dir_path).unwrap();
+
+    let cmd = Ns::from_args();
     let sub_cmd = get_subcommand(cmd);
     sub_cmd.process_cmd();
 }
 
-fn get_subcommand(cmd: Vcs) -> Box<dyn SubCommand> {
+fn get_subcommand(cmd: Ns) -> Box<dyn SubCommand> {
     match cmd {
-        Vcs::Upload { file } => {
+        Ns::Upload { file } => {
             let mut is_default = true;
             if file != DEFAULT_PATH {
                 is_default = false;
@@ -41,6 +55,6 @@ fn get_subcommand(cmd: Vcs) -> Box<dyn SubCommand> {
                 use_default_path: is_default,
             })
         }
-        Vcs::Download => Box::new(DownloadCmd {}),
+        Ns::Download => Box::new(DownloadCmd {}),
     }
 }

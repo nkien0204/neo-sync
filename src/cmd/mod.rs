@@ -1,4 +1,4 @@
-pub mod vcs;
+pub mod ns;
 
 pub mod subcommands {
     pub mod common;
