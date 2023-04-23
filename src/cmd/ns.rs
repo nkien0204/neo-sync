@@ -1,6 +1,14 @@
+use std::env;
+
 use structopt::StructOpt;
 
-use super::subcommands::{common::SubCommand, download_cmd::DownloadCmd, upload_cmd::UploadCmd};
+use crate::internal::local::gist_management;
+
+use super::subcommands::{
+    common::{self, SubCommand},
+    download_cmd::DownloadCmd,
+    upload_cmd::UploadCmd,
+};
 
 const DEFAULT_PATH: &str = "$HOME/.config/nvim/init.vim";
 
@@ -23,6 +31,13 @@ pub enum Ns {
 }
 
 pub fn execute() {
+    let dir_path = format!(
+        "{}/{}",
+        env::var("HOME").unwrap(),
+        common::GIST_PREFIX_FILENAME
+    );
+    gist_management::create_ns_home(&dir_path).unwrap();
+
     let cmd = Ns::from_args();
     let sub_cmd = get_subcommand(cmd);
     sub_cmd.process_cmd();
