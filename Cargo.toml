@@ -3,6 +3,7 @@ name = "neo-sync"
 version = "0.0.2"
 edition = "2021"
 authors = ["Kian Nguyen"]
+repository = "https://github.com/nkien0204/neo-sync"
 description = "Synchronizing Neovim's configurations"
 license = "MIT"
 
