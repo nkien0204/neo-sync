@@ -1,4 +1,4 @@
-# vim-config-sync
+# neo-sync
 Synchronizing Neovim's configurations
 
 ## How to
@@ -7,8 +7,8 @@ Synchronizing Neovim's configurations
 
 ### Run
 ```bash
-vcs <SUBCOMMAND>
+neo-sync <SUBCOMMAND>
 ```
-- To Upload Neovim's config file: `vcs upload`. It will try to upload the file on default path (`$HOME/.config/nvim/init.vim`). Or provide `-f` option if your file is in other location.
+- To Upload Neovim's config file: `neo-sync upload`. It will try to upload the file on default path (`$HOME/.config/nvim/init.vim`). Or provide `-f` option if your file is in other location.
 
-For more information, please run `vsc -h`.
+For more information, please run `neo-sync -h`.

@@ -2,7 +2,7 @@ use structopt::StructOpt;
 
 use super::subcommands::{common::SubCommand, download_cmd::DownloadCmd, upload_cmd::UploadCmd};
 
-const VERSION: &str = "v0.0.1";
+const VERSION: &str = "v0.0.2";
 const DEFAULT_PATH: &str = "$HOME/.config/nvim/init.vim";
 
 #[derive(StructOpt, Debug)]
