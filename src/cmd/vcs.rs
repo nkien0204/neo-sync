@@ -8,7 +8,7 @@ const DEFAULT_PATH: &str = "$HOME/.config/nvim/init.vim";
 #[derive(StructOpt, Debug)]
 #[structopt(about = "Synchronizing for Neovim's configurations", version = VERSION)]
 pub enum Vcs {
-    #[structopt(about = "upload local config")]
+    #[structopt(about = "Upload local config")]
     Upload {
         /// config file
         #[structopt(
@@ -19,7 +19,7 @@ pub enum Vcs {
         file: String,
     },
 
-    #[structopt(about = "download config")]
+    #[structopt(about = "Download config")]
     Download,
 }
 
