@@ -483,7 +483,7 @@ dependencies = [
 
 [[package]]
 name = "neo-sync"
-version = "0.0.4"
+version = "0.0.5"
 dependencies = [
  "reqwest",
  "serde",

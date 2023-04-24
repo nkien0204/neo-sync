@@ -27,7 +27,15 @@ pub enum Ns {
     },
 
     #[structopt(about = "Download config")]
-    Download,
+    Download {
+        /// config file
+        #[structopt(
+            short("f"),
+            long("file"),
+            default_value = DEFAULT_PATH
+        )]
+        file: String,
+    },
 }
 
 pub fn execute() {
@@ -55,6 +63,15 @@ fn get_subcommand(cmd: Ns) -> Box<dyn SubCommand> {
                 use_default_path: is_default,
             })
         }
-        Ns::Download => Box::new(DownloadCmd {}),
+        Ns::Download { file } => {
+            let mut is_default = true;
+            if file != DEFAULT_PATH {
+                is_default = false;
+            }
+            Box::new(DownloadCmd {
+                filename: file,
+                use_default_path: is_default,
+            })
+        }
     }
 }
