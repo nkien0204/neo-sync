@@ -19,7 +19,11 @@ impl SubCommand for UploadCmd {
     fn process_cmd(&self) {
         println!("uploading file: {}", self.filename);
         let vim_filename = if self.use_default_path {
-            format!("{}/.config/nvim/init.vim", env::var("HOME").unwrap())
+            format!(
+                "{}/{}",
+                env::var("HOME").unwrap(),
+                common::NVIM_CONFIG_FILE_POSTFIX
+            )
         } else {
             self.filename.clone()
         };

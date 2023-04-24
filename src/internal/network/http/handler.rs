@@ -22,6 +22,11 @@ pub struct GistBodyRes {
     pub id: String,
 }
 
+#[derive(serde::Serialize, Deserialize)]
+pub struct GetGistBodyRes {
+    pub files: HashMap<String, FilesObject>,
+}
+
 #[derive(Serialize, Deserialize)]
 pub struct FilesObject {
     pub content: String,
@@ -80,6 +85,16 @@ impl GithubApiHandler {
             .patch(update_url.as_str())
             .headers(self.set_headers())
             .body(serial_body)
+            .send()?;
+        Ok(response)
+    }
+
+    pub fn get_gist(&self, id: String) -> Result<Response, Box<dyn std::error::Error>> {
+        let update_url = Url::parse(format!("{}/{}", self.url, id).as_str())?;
+        let client = Client::builder().timeout(Duration::from_secs(10)).build()?;
+        let response = client
+            .get(update_url.as_str())
+            .headers(self.set_headers())
             .send()?;
         Ok(response)
     }
