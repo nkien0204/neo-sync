@@ -2,6 +2,7 @@
 Synchronizing Neovim's configurations
 
 ## How to
+*Note: Only support for Mac right now! (dealing with cross compiling issue from MacOS to others)*
 ### Setup
 ```bash
 cargo install neo-sync
