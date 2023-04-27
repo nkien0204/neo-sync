@@ -1,4 +1,7 @@
-use std::{env, fs, io};
+use std::{
+    env, fs,
+    io::{self, Write},
+};
 
 use crate::{
     cmd::subcommands::common,
@@ -41,6 +44,7 @@ impl SubCommand for DownloadCmd {
             }
             Err(_) => {
                 print!("could not get gist id from file, please fill your gist id here: ");
+                io::stdout().flush().unwrap();
                 let mut input = String::new();
                 io::stdin()
                     .read_line(&mut input)
