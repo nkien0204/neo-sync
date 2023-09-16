@@ -1,5 +1,7 @@
 use std::{collections::HashMap, env, fs};
 
+use reqwest::StatusCode;
+
 use crate::{
     cmd::subcommands::common,
     internal::{
@@ -50,9 +52,13 @@ impl SubCommand for UploadCmd {
         );
         match fs::read_to_string(gist_filename.clone()) {
             Ok(id) => {
-                println!("gist existed, trying to update...");
+                println!("gist info was existed on local, trying to update...");
                 let res = handler.update_gist(id, body).unwrap();
                 println!("{}", res.status());
+                if res.status() == StatusCode::UNAUTHORIZED || res.status() == StatusCode::NOT_FOUND
+                {
+                    println!("your gist ID or access token was not correct!");
+                }
                 return;
             }
             Err(_) => (),

@@ -1,10 +1,16 @@
 use reqwest::{
     blocking::{Client, Response},
-    header::{HeaderMap, HeaderValue, USER_AGENT},
+    header::{HeaderMap, HeaderValue, ACCEPT, AUTHORIZATION, USER_AGENT},
     Url,
 };
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, env, time::Duration};
+
+const HTTP_HEADER_GITHUB_ACCESS_TOKEN_KEY: &str = "GITHUB_ACCESS_TOKEN";
+const HTTP_HEADER_USER_AGENT_VALUE: &str = "vim-config-sync";
+const HTTP_HEADER_ACCEPT_VALUE: &str = "application/vnd.github+json";
+const HTTP_HEADER_GITHUB_API_VERSION_KEY: &str = "X-GitHub-Api-Version";
+const HTTP_HEADER_GITHUB_API_VERSION_VALUE: &str = "2022-11-28";
 
 pub struct GithubApiHandler {
     url: String,
@@ -40,24 +46,24 @@ impl GithubApiHandler {
     fn set_headers(&self) -> HeaderMap {
         let authz_token = format!(
             "Bearer {}",
-            match env::var("GITHUB_ACCESS_TOKEN") {
+            match env::var(HTTP_HEADER_GITHUB_ACCESS_TOKEN_KEY) {
                 Ok(v) => v,
                 Err(e) => {
-                    println!("GITHUB_ACCESS_TOKEN: {}", e);
+                    println!("{}: {}", HTTP_HEADER_GITHUB_ACCESS_TOKEN_KEY, e);
                     panic!("{}", e)
                 }
             }
         );
         let mut headers = HeaderMap::new();
-        headers.insert(USER_AGENT, HeaderValue::from_static("vim-config-sync"));
         headers.insert(
-            "Accept",
-            HeaderValue::from_static("application/vnd.github+json"),
+            USER_AGENT,
+            HeaderValue::from_static(HTTP_HEADER_USER_AGENT_VALUE),
         );
-        headers.insert("Authorization", HeaderValue::try_from(authz_token).unwrap());
+        headers.insert(ACCEPT, HeaderValue::from_static(HTTP_HEADER_ACCEPT_VALUE));
+        headers.insert(AUTHORIZATION, HeaderValue::try_from(authz_token).unwrap());
         headers.insert(
-            "X-GitHub-Api-Version",
-            HeaderValue::from_static("2022-11-28"),
+            HTTP_HEADER_GITHUB_API_VERSION_KEY,
+            HeaderValue::from_static(HTTP_HEADER_GITHUB_API_VERSION_VALUE),
         );
         headers
     }
